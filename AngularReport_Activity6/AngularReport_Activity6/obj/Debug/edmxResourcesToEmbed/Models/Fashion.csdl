@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MyStoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="CustID" />
+    </Key>
+    <Property Name="CustID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CustSurname" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CustCell" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Sales" Relationship="Self.FK__Sale__CustID__1920BF5C" FromRole="Customer" ToRole="Sale" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmpID" />
+    </Key>
+    <Property Name="EmpID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmpName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="EmpSurname" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="EmpCell" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Sales" Relationship="Self.FK__Sale__EmpID__1A14E395" FromRole="Employee" ToRole="Sale" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="ProdID" />
+    </Key>
+    <Property Name="ProdID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProdName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="ProdDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="ProductPrices" Relationship="Self.FK__ProductPr__ProdI__145C0A3F" FromRole="Product" ToRole="ProductPrice" />
+    <NavigationProperty Name="SaleLines" Relationship="Self.FK__SaleLine__ProdID__1DE57479" FromRole="Product" ToRole="SaleLine" />
+  </EntityType>
+  <EntityType Name="ProductPrice">
+    <Key>
+      <PropertyRef Name="PriceID" />
+    </Key>
+    <Property Name="PriceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProdID" Type="Int32" />
+    <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__ProductPr__ProdI__145C0A3F" FromRole="ProductPrice" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Sale">
+    <Key>
+      <PropertyRef Name="SaleID" />
+    </Key>
+    <Property Name="SaleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SaleDate" Type="DateTime" Precision="0" />
+    <Property Name="CustID" Type="Int32" />
+    <Property Name="EmpID" Type="Int32" />
+    <NavigationProperty Name="Customer" Relationship="Self.FK__Sale__CustID__1920BF5C" FromRole="Sale" ToRole="Customer" />
+    <NavigationProperty Name="Employee" Relationship="Self.FK__Sale__EmpID__1A14E395" FromRole="Sale" ToRole="Employee" />
+    <NavigationProperty Name="SaleLines" Relationship="Self.FK__SaleLine__SaleID__1CF15040" FromRole="Sale" ToRole="SaleLine" />
+  </EntityType>
+  <EntityType Name="SaleLine">
+    <Key>
+      <PropertyRef Name="LineID" />
+    </Key>
+    <Property Name="LineID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SaleID" Type="Int32" />
+    <Property Name="ProdID" Type="Int32" />
+    <Property Name="QtyPurchased" Type="Int32" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__SaleLine__ProdID__1DE57479" FromRole="SaleLine" ToRole="Product" />
+    <NavigationProperty Name="Sale" Relationship="Self.FK__SaleLine__SaleID__1CF15040" FromRole="SaleLine" ToRole="Sale" />
+  </EntityType>
+  <Association Name="FK__Sale__CustID__1920BF5C">
+    <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+    <End Role="Sale" Type="Self.Sale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="CustID" />
+      </Principal>
+      <Dependent Role="Sale">
+        <PropertyRef Name="CustID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Sale__EmpID__1A14E395">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+    <End Role="Sale" Type="Self.Sale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="EmpID" />
+      </Principal>
+      <Dependent Role="Sale">
+        <PropertyRef Name="EmpID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ProductPr__ProdI__145C0A3F">
+    <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="ProductPrice" Type="Self.ProductPrice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProdID" />
+      </Principal>
+      <Dependent Role="ProductPrice">
+        <PropertyRef Name="ProdID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SaleLine__ProdID__1DE57479">
+    <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="SaleLine" Type="Self.SaleLine" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProdID" />
+      </Principal>
+      <Dependent Role="SaleLine">
+        <PropertyRef Name="ProdID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SaleLine__SaleID__1CF15040">
+    <End Role="Sale" Type="Self.Sale" Multiplicity="0..1" />
+    <End Role="SaleLine" Type="Self.SaleLine" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sale">
+        <PropertyRef Name="SaleID" />
+      </Principal>
+      <Dependent Role="SaleLine">
+        <PropertyRef Name="SaleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MyStoreEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Customers" EntityType="Self.Customer" />
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="Products" EntityType="Self.Product" />
+    <EntitySet Name="ProductPrices" EntityType="Self.ProductPrice" />
+    <EntitySet Name="Sales" EntityType="Self.Sale" />
+    <EntitySet Name="SaleLines" EntityType="Self.SaleLine" />
+    <AssociationSet Name="FK__Sale__CustID__1920BF5C" Association="Self.FK__Sale__CustID__1920BF5C">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Sale" EntitySet="Sales" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Sale__EmpID__1A14E395" Association="Self.FK__Sale__EmpID__1A14E395">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Sale" EntitySet="Sales" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ProductPr__ProdI__145C0A3F" Association="Self.FK__ProductPr__ProdI__145C0A3F">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="ProductPrice" EntitySet="ProductPrices" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SaleLine__ProdID__1DE57479" Association="Self.FK__SaleLine__ProdID__1DE57479">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="SaleLine" EntitySet="SaleLines" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SaleLine__SaleID__1CF15040" Association="Self.FK__SaleLine__SaleID__1CF15040">
+      <End Role="Sale" EntitySet="Sales" />
+      <End Role="SaleLine" EntitySet="SaleLines" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

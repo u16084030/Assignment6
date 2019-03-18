@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TravelModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Airline">
+          <Key>
+            <PropertyRef Name="AirlineID" />
+          </Key>
+          <Property Name="AirlineID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AirlineName" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="Flight">
+          <Key>
+            <PropertyRef Name="FlightNumber" />
+          </Key>
+          <Property Name="FlightNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DepartureDate" Type="date" />
+          <Property Name="AirlineID" Type="int" />
+        </EntityType>
+        <EntityType Name="InternationalFlight">
+          <Key>
+            <PropertyRef Name="FlightNumber" />
+          </Key>
+          <Property Name="FlightNumber" Type="int" Nullable="false" />
+          <Property Name="DepartureCountry" Type="varchar" MaxLength="40" />
+          <Property Name="ArrivalCounrty" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="LocalFlight">
+          <Key>
+            <PropertyRef Name="FlightNumber" />
+          </Key>
+          <Property Name="FlightNumber" Type="int" Nullable="false" />
+          <Property Name="DepartureCity" Type="varchar" MaxLength="40" />
+          <Property Name="ArrivalCity" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="PassangerBooking">
+          <Key>
+            <PropertyRef Name="BookingNumber" />
+          </Key>
+          <Property Name="BookingNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FlightNumber" Type="int" />
+          <Property Name="PersonID" Type="int" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="PersonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="20" />
+          <Property Name="LastName" Type="varchar" MaxLength="20" />
+          <Property Name="PersonCell" Type="varchar" MaxLength="12" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'Travel.dbo.Pilot' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="Pilot">
+          <Property Name="PersonID" Type="int" />
+          <Property Name="FlightNumber" Type="int" />
+        </EntityType>-->
+        <Association Name="FK__Flight__AirlineI__145C0A3F">
+          <End Role="Airline" Type="Self.Airline" Multiplicity="0..1" />
+          <End Role="Flight" Type="Self.Flight" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airline">
+              <PropertyRef Name="AirlineID" />
+            </Principal>
+            <Dependent Role="Flight">
+              <PropertyRef Name="AirlineID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Internati__Fligh__1A14E395">
+          <End Role="Flight" Type="Self.Flight" Multiplicity="1" />
+          <End Role="InternationalFlight" Type="Self.InternationalFlight" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Flight">
+              <PropertyRef Name="FlightNumber" />
+            </Principal>
+            <Dependent Role="InternationalFlight">
+              <PropertyRef Name="FlightNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__LocalFlig__Fligh__173876EA">
+          <End Role="Flight" Type="Self.Flight" Multiplicity="1" />
+          <End Role="LocalFlight" Type="Self.LocalFlight" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Flight">
+              <PropertyRef Name="FlightNumber" />
+            </Principal>
+            <Dependent Role="LocalFlight">
+              <PropertyRef Name="FlightNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Passanger__Fligh__20C1E124">
+          <End Role="Flight" Type="Self.Flight" Multiplicity="0..1" />
+          <End Role="PassangerBooking" Type="Self.PassangerBooking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Flight">
+              <PropertyRef Name="FlightNumber" />
+            </Principal>
+            <Dependent Role="PassangerBooking">
+              <PropertyRef Name="FlightNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Passanger__Perso__21B6055D">
+          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+          <End Role="PassangerBooking" Type="Self.PassangerBooking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="PassangerBooking">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+error 6004: The table 'Travel.dbo.Pilot' is referenced by a relationship, but cannot be found.
+        <Association Name="FK__Pilot__FlightNum__24927208" />-->
+        <!--Errors Found During Generation:
+error 6004: The table 'Travel.dbo.Pilot' is referenced by a relationship, but cannot be found.
+        <Association Name="FK__Pilot__PersonID__239E4DCF" />-->
+        <EntityContainer Name="TravelModelStoreContainer">
+          <EntitySet Name="Airline" EntityType="Self.Airline" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Flight" EntityType="Self.Flight" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InternationalFlight" EntityType="Self.InternationalFlight" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LocalFlight" EntityType="Self.LocalFlight" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PassangerBooking" EntityType="Self.PassangerBooking" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Flight__AirlineI__145C0A3F" Association="Self.FK__Flight__AirlineI__145C0A3F">
+            <End Role="Airline" EntitySet="Airline" />
+            <End Role="Flight" EntitySet="Flight" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Internati__Fligh__1A14E395" Association="Self.FK__Internati__Fligh__1A14E395">
+            <End Role="Flight" EntitySet="Flight" />
+            <End Role="InternationalFlight" EntitySet="InternationalFlight" />
+          </AssociationSet>
+          <AssociationSet Name="FK__LocalFlig__Fligh__173876EA" Association="Self.FK__LocalFlig__Fligh__173876EA">
+            <End Role="Flight" EntitySet="Flight" />
+            <End Role="LocalFlight" EntitySet="LocalFlight" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Passanger__Fligh__20C1E124" Association="Self.FK__Passanger__Fligh__20C1E124">
+            <End Role="Flight" EntitySet="Flight" />
+            <End Role="PassangerBooking" EntitySet="PassangerBooking" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Passanger__Perso__21B6055D" Association="Self.FK__Passanger__Perso__21B6055D">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="PassangerBooking" EntitySet="PassangerBooking" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TravelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Airline">
+          <Key>
+            <PropertyRef Name="AirlineID" />
+          </Key>
+          <Property Name="AirlineID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AirlineName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Flights" Relationship="Self.FK__Flight__AirlineI__145C0A3F" FromRole="Airline" ToRole="Flight" />
+        </EntityType>
+        <EntityType Name="Flight">
+          <Key>
+            <PropertyRef Name="FlightNumber" />
+          </Key>
+          <Property Name="FlightNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DepartureDate" Type="DateTime" Precision="0" />
+          <Property Name="AirlineID" Type="Int32" />
+          <NavigationProperty Name="Airline" Relationship="Self.FK__Flight__AirlineI__145C0A3F" FromRole="Flight" ToRole="Airline" />
+          <NavigationProperty Name="InternationalFlight" Relationship="Self.FK__Internati__Fligh__1A14E395" FromRole="Flight" ToRole="InternationalFlight" />
+          <NavigationProperty Name="LocalFlight" Relationship="Self.FK__LocalFlig__Fligh__173876EA" FromRole="Flight" ToRole="LocalFlight" />
+          <NavigationProperty Name="PassangerBookings" Relationship="Self.FK__Passanger__Fligh__20C1E124" FromRole="Flight" ToRole="PassangerBooking" />
+        </EntityType>
+        <EntityType Name="InternationalFlight">
+          <Key>
+            <PropertyRef Name="FlightNumber" />
+          </Key>
+          <Property Name="FlightNumber" Type="Int32" Nullable="false" />
+          <Property Name="DepartureCountry" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ArrivalCounrty" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Flight" Relationship="Self.FK__Internati__Fligh__1A14E395" FromRole="InternationalFlight" ToRole="Flight" />
+        </EntityType>
+        <EntityType Name="LocalFlight">
+          <Key>
+            <PropertyRef Name="FlightNumber" />
+          </Key>
+          <Property Name="FlightNumber" Type="Int32" Nullable="false" />
+          <Property Name="DepartureCity" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ArrivalCity" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Flight" Relationship="Self.FK__LocalFlig__Fligh__173876EA" FromRole="LocalFlight" ToRole="Flight" />
+        </EntityType>
+        <EntityType Name="PassangerBooking">
+          <Key>
+            <PropertyRef Name="BookingNumber" />
+          </Key>
+          <Property Name="BookingNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FlightNumber" Type="Int32" />
+          <Property Name="PersonID" Type="Int32" />
+          <NavigationProperty Name="Flight" Relationship="Self.FK__Passanger__Fligh__20C1E124" FromRole="PassangerBooking" ToRole="Flight" />
+          <NavigationProperty Name="Person" Relationship="Self.FK__Passanger__Perso__21B6055D" FromRole="PassangerBooking" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="PersonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PersonCell" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PassangerBookings" Relationship="Self.FK__Passanger__Perso__21B6055D" FromRole="Person" ToRole="PassangerBooking" />
+        </EntityType>
+        <Association Name="FK__Flight__AirlineI__145C0A3F">
+          <End Role="Airline" Type="Self.Airline" Multiplicity="0..1" />
+          <End Role="Flight" Type="Self.Flight" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airline">
+              <PropertyRef Name="AirlineID" />
+            </Principal>
+            <Dependent Role="Flight">
+              <PropertyRef Name="AirlineID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Internati__Fligh__1A14E395">
+          <End Role="Flight" Type="Self.Flight" Multiplicity="1" />
+          <End Role="InternationalFlight" Type="Self.InternationalFlight" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Flight">
+              <PropertyRef Name="FlightNumber" />
+            </Principal>
+            <Dependent Role="InternationalFlight">
+              <PropertyRef Name="FlightNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__LocalFlig__Fligh__173876EA">
+          <End Role="Flight" Type="Self.Flight" Multiplicity="1" />
+          <End Role="LocalFlight" Type="Self.LocalFlight" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Flight">
+              <PropertyRef Name="FlightNumber" />
+            </Principal>
+            <Dependent Role="LocalFlight">
+              <PropertyRef Name="FlightNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Passanger__Fligh__20C1E124">
+          <End Role="Flight" Type="Self.Flight" Multiplicity="0..1" />
+          <End Role="PassangerBooking" Type="Self.PassangerBooking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Flight">
+              <PropertyRef Name="FlightNumber" />
+            </Principal>
+            <Dependent Role="PassangerBooking">
+              <PropertyRef Name="FlightNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Passanger__Perso__21B6055D">
+          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+          <End Role="PassangerBooking" Type="Self.PassangerBooking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="PassangerBooking">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TravelEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Airlines" EntityType="Self.Airline" />
+          <EntitySet Name="Flights" EntityType="Self.Flight" />
+          <EntitySet Name="InternationalFlights" EntityType="Self.InternationalFlight" />
+          <EntitySet Name="LocalFlights" EntityType="Self.LocalFlight" />
+          <EntitySet Name="PassangerBookings" EntityType="Self.PassangerBooking" />
+          <EntitySet Name="People" EntityType="Self.Person" />
+          <AssociationSet Name="FK__Flight__AirlineI__145C0A3F" Association="Self.FK__Flight__AirlineI__145C0A3F">
+            <End Role="Airline" EntitySet="Airlines" />
+            <End Role="Flight" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Internati__Fligh__1A14E395" Association="Self.FK__Internati__Fligh__1A14E395">
+            <End Role="Flight" EntitySet="Flights" />
+            <End Role="InternationalFlight" EntitySet="InternationalFlights" />
+          </AssociationSet>
+          <AssociationSet Name="FK__LocalFlig__Fligh__173876EA" Association="Self.FK__LocalFlig__Fligh__173876EA">
+            <End Role="Flight" EntitySet="Flights" />
+            <End Role="LocalFlight" EntitySet="LocalFlights" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Passanger__Fligh__20C1E124" Association="Self.FK__Passanger__Fligh__20C1E124">
+            <End Role="Flight" EntitySet="Flights" />
+            <End Role="PassangerBooking" EntitySet="PassangerBookings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Passanger__Perso__21B6055D" Association="Self.FK__Passanger__Perso__21B6055D">
+            <End Role="Person" EntitySet="People" />
+            <End Role="PassangerBooking" EntitySet="PassangerBookings" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TravelModelStoreContainer" CdmEntityContainer="TravelEntities">
+          <EntitySetMapping Name="Airlines">
+            <EntityTypeMapping TypeName="TravelModel.Airline">
+              <MappingFragment StoreEntitySet="Airline">
+                <ScalarProperty Name="AirlineID" ColumnName="AirlineID" />
+                <ScalarProperty Name="AirlineName" ColumnName="AirlineName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Flights">
+            <EntityTypeMapping TypeName="TravelModel.Flight">
+              <MappingFragment StoreEntitySet="Flight">
+                <ScalarProperty Name="FlightNumber" ColumnName="FlightNumber" />
+                <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
+                <ScalarProperty Name="AirlineID" ColumnName="AirlineID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InternationalFlights">
+            <EntityTypeMapping TypeName="TravelModel.InternationalFlight">
+              <MappingFragment StoreEntitySet="InternationalFlight">
+                <ScalarProperty Name="FlightNumber" ColumnName="FlightNumber" />
+                <ScalarProperty Name="DepartureCountry" ColumnName="DepartureCountry" />
+                <ScalarProperty Name="ArrivalCounrty" ColumnName="ArrivalCounrty" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LocalFlights">
+            <EntityTypeMapping TypeName="TravelModel.LocalFlight">
+              <MappingFragment StoreEntitySet="LocalFlight">
+                <ScalarProperty Name="FlightNumber" ColumnName="FlightNumber" />
+                <ScalarProperty Name="DepartureCity" ColumnName="DepartureCity" />
+                <ScalarProperty Name="ArrivalCity" ColumnName="ArrivalCity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PassangerBookings">
+            <EntityTypeMapping TypeName="TravelModel.PassangerBooking">
+              <MappingFragment StoreEntitySet="PassangerBooking">
+                <ScalarProperty Name="BookingNumber" ColumnName="BookingNumber" />
+                <ScalarProperty Name="FlightNumber" ColumnName="FlightNumber" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="TravelModel.Person">
+              <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="PersonCell" ColumnName="PersonCell" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

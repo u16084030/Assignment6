@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TravelModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Airline">
+    <Key>
+      <PropertyRef Name="AirlineID" />
+    </Key>
+    <Property Name="AirlineID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AirlineName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Flights" Relationship="Self.FK__Flight__AirlineI__145C0A3F" FromRole="Airline" ToRole="Flight" />
+  </EntityType>
+  <EntityType Name="Flight">
+    <Key>
+      <PropertyRef Name="FlightNumber" />
+    </Key>
+    <Property Name="FlightNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DepartureDate" Type="DateTime" Precision="0" />
+    <Property Name="AirlineID" Type="Int32" />
+    <NavigationProperty Name="Airline" Relationship="Self.FK__Flight__AirlineI__145C0A3F" FromRole="Flight" ToRole="Airline" />
+    <NavigationProperty Name="InternationalFlight" Relationship="Self.FK__Internati__Fligh__1A14E395" FromRole="Flight" ToRole="InternationalFlight" />
+    <NavigationProperty Name="LocalFlight" Relationship="Self.FK__LocalFlig__Fligh__173876EA" FromRole="Flight" ToRole="LocalFlight" />
+    <NavigationProperty Name="PassangerBookings" Relationship="Self.FK__Passanger__Fligh__20C1E124" FromRole="Flight" ToRole="PassangerBooking" />
+  </EntityType>
+  <EntityType Name="InternationalFlight">
+    <Key>
+      <PropertyRef Name="FlightNumber" />
+    </Key>
+    <Property Name="FlightNumber" Type="Int32" Nullable="false" />
+    <Property Name="DepartureCountry" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="ArrivalCounrty" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Flight" Relationship="Self.FK__Internati__Fligh__1A14E395" FromRole="InternationalFlight" ToRole="Flight" />
+  </EntityType>
+  <EntityType Name="LocalFlight">
+    <Key>
+      <PropertyRef Name="FlightNumber" />
+    </Key>
+    <Property Name="FlightNumber" Type="Int32" Nullable="false" />
+    <Property Name="DepartureCity" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="ArrivalCity" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Flight" Relationship="Self.FK__LocalFlig__Fligh__173876EA" FromRole="LocalFlight" ToRole="Flight" />
+  </EntityType>
+  <EntityType Name="PassangerBooking">
+    <Key>
+      <PropertyRef Name="BookingNumber" />
+    </Key>
+    <Property Name="BookingNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FlightNumber" Type="Int32" />
+    <Property Name="PersonID" Type="Int32" />
+    <NavigationProperty Name="Flight" Relationship="Self.FK__Passanger__Fligh__20C1E124" FromRole="PassangerBooking" ToRole="Flight" />
+    <NavigationProperty Name="Person" Relationship="Self.FK__Passanger__Perso__21B6055D" FromRole="PassangerBooking" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="PersonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PersonCell" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="PassangerBookings" Relationship="Self.FK__Passanger__Perso__21B6055D" FromRole="Person" ToRole="PassangerBooking" />
+  </EntityType>
+  <Association Name="FK__Flight__AirlineI__145C0A3F">
+    <End Role="Airline" Type="Self.Airline" Multiplicity="0..1" />
+    <End Role="Flight" Type="Self.Flight" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Airline">
+        <PropertyRef Name="AirlineID" />
+      </Principal>
+      <Dependent Role="Flight">
+        <PropertyRef Name="AirlineID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Internati__Fligh__1A14E395">
+    <End Role="Flight" Type="Self.Flight" Multiplicity="1" />
+    <End Role="InternationalFlight" Type="Self.InternationalFlight" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Flight">
+        <PropertyRef Name="FlightNumber" />
+      </Principal>
+      <Dependent Role="InternationalFlight">
+        <PropertyRef Name="FlightNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__LocalFlig__Fligh__173876EA">
+    <End Role="Flight" Type="Self.Flight" Multiplicity="1" />
+    <End Role="LocalFlight" Type="Self.LocalFlight" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Flight">
+        <PropertyRef Name="FlightNumber" />
+      </Principal>
+      <Dependent Role="LocalFlight">
+        <PropertyRef Name="FlightNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Passanger__Fligh__20C1E124">
+    <End Role="Flight" Type="Self.Flight" Multiplicity="0..1" />
+    <End Role="PassangerBooking" Type="Self.PassangerBooking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Flight">
+        <PropertyRef Name="FlightNumber" />
+      </Principal>
+      <Dependent Role="PassangerBooking">
+        <PropertyRef Name="FlightNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Passanger__Perso__21B6055D">
+    <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+    <End Role="PassangerBooking" Type="Self.PassangerBooking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="PassangerBooking">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TravelEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Airlines" EntityType="Self.Airline" />
+    <EntitySet Name="Flights" EntityType="Self.Flight" />
+    <EntitySet Name="InternationalFlights" EntityType="Self.InternationalFlight" />
+    <EntitySet Name="LocalFlights" EntityType="Self.LocalFlight" />
+    <EntitySet Name="PassangerBookings" EntityType="Self.PassangerBooking" />
+    <EntitySet Name="People" EntityType="Self.Person" />
+    <AssociationSet Name="FK__Flight__AirlineI__145C0A3F" Association="Self.FK__Flight__AirlineI__145C0A3F">
+      <End Role="Airline" EntitySet="Airlines" />
+      <End Role="Flight" EntitySet="Flights" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Internati__Fligh__1A14E395" Association="Self.FK__Internati__Fligh__1A14E395">
+      <End Role="Flight" EntitySet="Flights" />
+      <End Role="InternationalFlight" EntitySet="InternationalFlights" />
+    </AssociationSet>
+    <AssociationSet Name="FK__LocalFlig__Fligh__173876EA" Association="Self.FK__LocalFlig__Fligh__173876EA">
+      <End Role="Flight" EntitySet="Flights" />
+      <End Role="LocalFlight" EntitySet="LocalFlights" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Passanger__Fligh__20C1E124" Association="Self.FK__Passanger__Fligh__20C1E124">
+      <End Role="Flight" EntitySet="Flights" />
+      <End Role="PassangerBooking" EntitySet="PassangerBookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Passanger__Perso__21B6055D" Association="Self.FK__Passanger__Perso__21B6055D">
+      <End Role="Person" EntitySet="People" />
+      <End Role="PassangerBooking" EntitySet="PassangerBookings" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

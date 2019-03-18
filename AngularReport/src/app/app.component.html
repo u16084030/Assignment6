@@ -1,0 +1,33 @@
+<h1>Airline Flight Bookings Report</h1>
+<div>
+  <select [(ngModel)]="selection">
+    <option *ngFor="let option of options" [value]="option.id">{{option.text}}</option>
+  </select>
+  <br><br>
+  <button (click)="submitRequest()">Generate</button>
+  <button (click)="downloadRequest(1)">Download PDF</button>
+  <button (click)="downloadRequest(2)">Download Word</button>
+</div>
+
+<div *ngIf="chart" class="reportChart">
+  <canvas id="canvas">{{ chart }}</canvas>
+</div>
+<div *ngIf="flights">
+  <div class="flightTable">
+    <div *ngFor="let item of courses">
+      <table class="container">
+        <caption><strong>{{item.Title}}</strong></caption>
+        <tr>
+          <th>Passanger</th>
+          <th>Booking Number</th>
+        </tr>
+        <tr *ngFor="let bookingObj of item.PassangerBookings">
+          <td>{{bookingObj.Passanger}}</td>
+          <td>{{bookingObj.Number}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>
